@@ -1,14 +1,16 @@
 import requests
 import os
 from dotenv import load_dotenv
-from acc_list import main_wallets
+from acc_list import main_wallets, WALLET_GROUP_1, WALLET_GROUP_2, WALLET_GROUP_3
 import json
 
 # Force reload environment variables
 load_dotenv(override=True)
 
 API_KEY = os.getenv("HELIUS_API_KEY")
-WEBHOOK_URL = "https://f7b6-124-120-193-76.ngrok-free.app"
+WEBHOOK_URL_1 = "https://your-ngrok-url-1.ngrok-free.app"  # for port 8001
+WEBHOOK_URL_2 = "https://your-ngrok-url-2.ngrok-free.app"  # for port 8002
+WEBHOOK_URL_3 = "https://your-ngrok-url-3.ngrok-free.app"  # for port 8003
 
 
 def get_existing_webhooks():
@@ -25,22 +27,22 @@ def delete_webhook(webhook_id):
     print(f"Deleted webhook {webhook_id}: {response.status_code}")
 
 
-def register_webhooks(accounts):
+def register_webhooks(accounts, webhook_url):
     # Get existing webhooks
     existing = get_existing_webhooks()
 
-    # Only delete webhooks that match our WEBHOOK_URL
+    # Only delete webhooks that match our specific webhook_url
     for webhook in existing:
-        if webhook.get("webhookURL") == WEBHOOK_URL:
+        if webhook.get("webhookURL") == webhook_url:
             print(
-                f"Deleting webhook {webhook['webhookID']} matching URL: {WEBHOOK_URL}"
+                f"Deleting webhook {webhook['webhookID']} matching URL: {webhook_url}"
             )
             delete_webhook(webhook["webhookID"])
 
-    # Create single webhook for all accounts
+    # Create webhook for this group of accounts
     url = f"https://api.helius.xyz/v0/webhooks?api-key={API_KEY}"
     payload = {
-        "webhookURL": WEBHOOK_URL,
+        "webhookURL": webhook_url,
         "transactionTypes": ["TRANSFER"],
         "accountAddresses": accounts,
         "webhookType": "enhanced",
@@ -60,12 +62,23 @@ if __name__ == "__main__":
     print(
         f"Using API key: {API_KEY[:4]}...{API_KEY[-4:]}"
     )  # Show first/last 4 chars of API key
-    print(f"Webhook URL: {WEBHOOK_URL}")
+    print(f"Webhook URL 1: {WEBHOOK_URL_1}")
+    print(f"Webhook URL 2: {WEBHOOK_URL_2}")
+    print(f"Webhook URL 3: {WEBHOOK_URL_3}")
     print(f"Monitoring wallets: {len(main_wallets)}")
 
-    status, response = register_webhooks(main_wallets)
+    # Register webhooks for each group
+    print("\nRegistering Group 1...")
+    status1, response1 = register_webhooks(WALLET_GROUP_1, WEBHOOK_URL_1)
 
-    if status:
-        print("\nWebhook registration successful!")
+    print("\nRegistering Group 2...")
+    status2, response2 = register_webhooks(WALLET_GROUP_2, WEBHOOK_URL_2)
+
+    print("\nRegistering Group 3...")
+    status3, response3 = register_webhooks(WALLET_GROUP_3, WEBHOOK_URL_3)
+
+    # Check overall status
+    if status1 and status2 and status3:
+        print("\nAll webhook registrations successful!")
     else:
-        print("\nWebhook registration failed!")
+        print("\nSome webhook registrations failed!")
