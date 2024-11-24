@@ -4,13 +4,12 @@ from dotenv import load_dotenv
 from acc_list import main_wallets, WALLET_GROUP_1, WALLET_GROUP_2, WALLET_GROUP_3
 import json
 
-# Force reload environment variables
 load_dotenv(override=True)
 
 API_KEY = os.getenv("HELIUS_API_KEY")
-WEBHOOK_URL_1 = "https://your-ngrok-url-1.ngrok-free.app"  # for port 8001
-WEBHOOK_URL_2 = "https://your-ngrok-url-2.ngrok-free.app"  # for port 8002
-WEBHOOK_URL_3 = "https://your-ngrok-url-3.ngrok-free.app"  # for port 8003
+WEBHOOK_URL_1 = "http://113.30.188.29:8001"  # for port 8001
+WEBHOOK_URL_2 = "http://113.30.188.29:8002"  # for port 8002
+WEBHOOK_URL_3 = "http://113.30.188.29:8003"  # for port 8003
 
 
 def get_existing_webhooks():
