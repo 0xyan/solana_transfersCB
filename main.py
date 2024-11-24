@@ -12,33 +12,11 @@ WEBHOOK_URL_2 = "http://113.30.188.29:8002"  # for port 8002
 WEBHOOK_URL_3 = "http://113.30.188.29:8003"  # for port 8003
 
 
-def get_existing_webhooks():
-    url = f"https://api.helius.xyz/v0/webhooks?api-key={API_KEY}"
-    response = requests.get(url)
-    webhooks = response.json()
-    print(f"\nFound {len(webhooks)} existing webhooks")
-    return webhooks
-
-
-def delete_webhook(webhook_id):
-    url = f"https://api.helius.xyz/v0/webhooks/{webhook_id}?api-key={API_KEY}"
-    response = requests.delete(url)
-    print(f"Deleted webhook {webhook_id}: {response.status_code}")
-
-
 def register_webhooks(accounts, webhook_url):
-    # Get existing webhooks
-    existing = get_existing_webhooks()
+    print(f"\nRegistering new webhook for URL: {webhook_url}")
+    print(f"Number of accounts in this group: {len(accounts)}")
 
-    # Only delete webhooks that match our specific webhook_url
-    for webhook in existing:
-        if webhook.get("webhookURL") == webhook_url:
-            print(
-                f"Deleting webhook {webhook['webhookID']} matching URL: {webhook_url}"
-            )
-            delete_webhook(webhook["webhookID"])
-
-    # Create webhook for this group of accounts
+    # Create webhook
     url = f"https://api.helius.xyz/v0/webhooks?api-key={API_KEY}"
     payload = {
         "webhookURL": webhook_url,
@@ -49,11 +27,11 @@ def register_webhooks(accounts, webhook_url):
 
     response = requests.post(url, json=payload)
     if response.status_code == 200:
-        print(f"Successfully registered webhook for {len(accounts)} accounts")
+        print("Successfully registered webhook")
         return True, response.json()
     else:
-        print(f"Failed to create webhook: {response.status_code} - {response.text}")
-        return False, None
+        print(f"Failed to register webhook: {response.text}")
+        return False, response.text
 
 
 if __name__ == "__main__":
