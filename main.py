@@ -7,9 +7,9 @@ import json
 load_dotenv(override=True)
 
 API_KEY = os.getenv("HELIUS_API_KEY")
-WEBHOOK_URL_1 = "http://113.30.188.29:8001"  # for port 8001
-WEBHOOK_URL_2 = "http://113.30.188.29:8002"  # for port 8002
-WEBHOOK_URL_3 = "http://113.30.188.29:8003"  # for port 8003
+WEBHOOK_URL_1 = "http://54.79.31.7:8001"  # for port 8001
+WEBHOOK_URL_2 = "http://54.79.31.7:8002"  # for port 8002
+WEBHOOK_URL_3 = "http://54.79.31.7:8003"  # for port 80033
 
 
 def register_webhooks(accounts, webhook_url):
