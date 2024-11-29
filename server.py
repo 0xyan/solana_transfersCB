@@ -104,6 +104,8 @@ def create_app(wallet_group, group_name):
                 message = (
                     f"🔔 <b>New {token_name} Coinbase Transfer</b>\n\n"
                     f"Amount: {amount:,.2f}\n"
+                    f"From: <code>{from_address[:4]}...{from_address[-4:]}</code>\n"
+                    f"To: <code>{to_address[:4]}...{to_address[-4:]}</code>\n"
                     f"<a href='https://solscan.io/tx/{tx_signature}'>View Transaction</a>"
                 )
 
